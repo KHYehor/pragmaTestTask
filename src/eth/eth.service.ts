@@ -47,8 +47,17 @@ export class EthService {
     if (cachedGroup) {
       return cachedGroup;
     }
+
+    let group: IGroup;
+    try {
+      group = await this.web3Service.getGroup(id);
+    } catch (err) {
+      if (err.message === `Returned error: execution reverted: Invalid group id`) {
+        return 'not_found';
+      }
+      throw err;
+    }
     // Saving to Cache
-    const group: IGroup = await this.web3Service.getGroup(id);
     await this.cacheManager.set(
       `group-${id}`,
       { name: group.name, indexes: group.indexes },
@@ -102,8 +111,18 @@ export class EthService {
     if (cachedIndex) {
       return cachedIndex;
     }
+
+    let index: IIndex;
+    try {
+      index = await this.web3Service.getIndex(id);
+    } catch (err) {
+      if (err.message === `Returned error: execution reverted: Invalid group id`) {
+        return 'not_found';
+      }
+      throw err;
+    }
+
     // Saving to cache
-    const index: IIndex = await this.web3Service.getIndex(id);
     await this.cacheManager.set(
       `index-${id}`,
       {
