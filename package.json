@@ -32,6 +32,7 @@
       "@types/cache-manager": "^2.10.3",
       "@types/web3": "^1.2.2",
       "cache-manager": "^3.4.0",
+      "class-validator": "^0.12.2",
       "fastify-swagger": "^3.5.0",
       "mysql": "^2.14.1",
       "reflect-metadata": "^0.1.10",

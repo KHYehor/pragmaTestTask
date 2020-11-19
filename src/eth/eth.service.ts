@@ -84,16 +84,18 @@ export class EthService {
     // Add also check for relations
     const existingRelations = await this.groupsIndexesRepository.find({
       select: ['indexId'],
-      where: { groupId: Number(id) }
+      where: {
+        groupId: Number(id),
+        indexId: Raw(alias =>`${alias} IN (:...indexes_ids)`, { indexes_ids: group.indexes })
+      }
     });
+    const existingMapped = existingRelations.map(item => item.indexId);
     // Find relations that doesn't exist
-    const difference = group.indexes.filter(x =>
-      !existingRelations.map(item => item.indexId).includes(Number(x))
-    );
+    const difference = group.indexes.filter(x => !existingMapped.includes(Number(x)));
     if (difference.length) {
       // Find indexies that exists
       const indexes = await this.indexRepository.find({
-        indexId: Raw(alias =>`${alias} IN (:...difference)`, { difference: difference.map(el => Number(el)) })
+        id: Raw(alias =>`${alias} IN (:...difference)`, { difference: difference.map(el => Number(el)) })
       });
       if (!indexes) return;
       const indexesDB = indexes.map(indexId =>
@@ -116,7 +118,7 @@ export class EthService {
     try {
       index = await this.web3Service.getIndex(id);
     } catch (err) {
-      if (err.message === `Returned error: execution reverted: Invalid group id`) {
+      if (err.message === `Returned error: execution reverted: Invalid index id`) {
         return 'not_found';
       }
       throw err;
