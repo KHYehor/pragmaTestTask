@@ -2,8 +2,7 @@
 
 Необходимости в полноценном докер файле не было, поэтому перед запуском можно обойтись командой
 
-``docker run --name pragma-mysql -e MYSQL_ROOT_PASSWORD=pragma -e MYSQL_DATABASE=Pragm
-  a  -p 3306:3306 mysql:latest --default-authentication-plugin=mysql_native_password``
+``docker run --name pragma-mysql -e MYSQL_ROOT_PASSWORD=pragma -e MYSQL_DATABASE=Pragma  -p 3306:3306 mysql:latest --default-authentication-plugin=mysql_native_password``
   
 Перед стартом сделать ``yarn install``
 
